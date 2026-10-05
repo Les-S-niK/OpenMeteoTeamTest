@@ -28,7 +28,7 @@ class TodayWeather(BaseModel):
     uv_index: float
 
 
-class TomorrowWeather(BaseModel):
+class DaysOfWeekWeather(BaseModel):
     temperature: float
     condition: WeatherType
 
@@ -36,4 +36,4 @@ class TomorrowWeather(BaseModel):
 class WeatherSummary(BaseModel):
     location: LocationInfo
     today: TodayWeather
-    tomorrow: TomorrowWeather
+    weather_for_week: list[DaysOfWeekWeather]  # Погода на неделю
