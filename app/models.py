@@ -1,18 +1,17 @@
 from datetime import date
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class WeatherType(str, Enum):
-    SUNNY = "Sunny"
-    RAINY = "Rainy"
-    CLEAR = "Clear"
-    CLOUDY = "Cloudy"
-
-
-class CityRequest(BaseModel):
-    city: str = Field(examples=["Sochi"])
+    CLEAR = "clear"
+    CLOUDS = "clouds"
+    RAIN = "rain"
+    SNOW = "snow"
+    THUNDERSTORM = "thunderstorm"
+    DRIZZLE = "drizzle"
+    FOG = "fog"
 
 
 class LocationInfo(BaseModel):
@@ -22,6 +21,7 @@ class LocationInfo(BaseModel):
 
 
 class TodayWeather(BaseModel):
+    location: LocationInfo
     temperature: float
     humidity: int
     pressure: float
@@ -35,5 +35,4 @@ class DaysOfWeekWeather(BaseModel):
 
 class WeatherSummary(BaseModel):
     location: LocationInfo
-    today: TodayWeather
     weather_for_week: list[DaysOfWeekWeather]  # Погода на неделю
