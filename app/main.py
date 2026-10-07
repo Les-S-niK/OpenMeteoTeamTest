@@ -13,9 +13,9 @@ async def health():
     return {"status": "ok"}
 
 
-@app.post("/weather/today")
+@app.get("/weather/today")
 async def get_today_weather() -> TodayWeather: ...
 
 
-@app.post("/weather/week")
+@app.get("/weather/week")
 async def get_week_weather() -> WeatherSummary: ...
