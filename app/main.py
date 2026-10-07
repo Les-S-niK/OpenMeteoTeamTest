@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
 from app.models import (
-    CityRequest,
     TodayWeather,
     WeatherSummary,
 )
@@ -9,9 +8,14 @@ from app.models import (
 app: FastAPI = FastAPI()
 
 
+@app.get("/health/")
+async def health():
+    return {"status": "ok"}
+
+
 @app.post("/weather/today")
-async def get_today_weather(body: CityRequest) -> TodayWeather: ...
+async def get_today_weather() -> TodayWeather: ...
 
 
 @app.post("/weather/week")
-async def get_week_weather(body: CityRequest) -> WeatherSummary: ...
+async def get_week_weather() -> WeatherSummary: ...
