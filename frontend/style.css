@@ -1,0 +1,196 @@
+/* Сброс базовых стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Базовая структура страницы */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* Основной блок с ПЕРЕЛИВАЮЩИМСЯ градиентом */
+.hero {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    overflow: hidden;
+    position: relative;
+
+    /* Многослойный градиент */
+    background: 
+        radial-gradient(circle at 20% 30%, #d92be2 0%, transparent 45%),
+        radial-gradient(circle at 80% 20%, #b300ff 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, #4a00a0 0%, transparent 50%),
+        radial-gradient(circle at 30% 90%, #7004B8 0%, transparent 45%),
+        #5409AF;
+
+    background-size: 200% 200%;
+    animation: colorFlow 15s ease-in-out infinite;
+}
+
+/* Анимация перелива */
+@keyframes colorFlow {
+    0% {
+        background-position: 
+            0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
+    }
+    25% {
+        background-position: 
+            50% 20%, 60% 40%, 40% 70%, 50% 60%, 0% 0%;
+    }
+    50% {
+        background-position: 
+            100% 50%, 20% 80%, 0% 50%, 100% 30%, 0% 0%;
+    }
+    75% {
+        background-position: 
+            50% 80%, 60% 20%, 70% 40%, 40% 70%, 0% 0%;
+    }
+    100% {
+        background-position: 
+            0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
+    }
+}
+
+.hero-content {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Шрифт K2D для заголовков */
+h1 {
+    font-family: 'K2D', sans-serif;
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+h2 {
+    font-family: 'K2D', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 400;
+    max-width: 600px;
+    line-height: 1.3;
+    margin-bottom: 25px;
+}
+
+/* Шрифт Actor для мелкого текста */
+.disclaimer {
+    font-family: 'Actor', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 520px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+/* Кнопка-ссылка */
+.weather-btn {
+    font-family: 'K2D', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    /* Стили для ссылки, чтобы вела себя как кнопка */
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.weather-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.4);
+}
+
+.weather-btn:active {
+    transform: translateY(0);
+}
+
+/* Футер - Шрифт Jura */
+.footer {
+    font-family: 'Jura', sans-serif;
+    background-color: #250046;
+    padding: 30px 20px 50px;
+    font-size: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.participants-title {
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+/* Сетка для списка участников */
+.participants-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 40px;
+}
+
+.participants-grid p {
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.participants-grid a {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: border-color 0.2s;
+}
+
+.participants-grid a:hover {
+    border-color: #ffffff;
+}
+
+/* ====== АДАПТИВНОСТЬ ====== */
+@media (max-width: 600px) {
+    .hero {
+        padding: 60px 15px;
+        animation-duration: 18s;
+    }
+
+    .weather-btn {
+        width: 100%;
+        padding: 16px 20px;
+    }
+
+    .participants-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .footer {
+        padding: 25px 15px 40px;
+    }
+}
