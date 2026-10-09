@@ -31,6 +31,7 @@ class TodayWeather(BaseModel):
 class DaysOfWeekWeather(BaseModel):
     temperature: float
     condition: WeatherType
+    date: date
 
 
 class WeatherSummary(BaseModel):
