@@ -1,7 +1,7 @@
 from datetime import date
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class WeatherType(str, Enum):
@@ -35,5 +35,23 @@ class DaysOfWeekWeather(BaseModel):
 
 
 class WeatherSummary(BaseModel):
+    """Прогноз погоды на неделю"""
+
     location: LocationInfo
-    weather_for_week: list[DaysOfWeekWeather]  # Погода на неделю
+    weather_for_week: list[DaysOfWeekWeather] = Field(
+        ...,
+        examples=[
+            [
+                DaysOfWeekWeather(
+                    temperature=26.0,
+                    condition=WeatherType.CLEAR,
+                    date=date(2026, 10, 9),
+                ),
+                DaysOfWeekWeather(
+                    temperature=21.0,
+                    condition=WeatherType.CLOUDS,
+                    date=date(2026, 10, 10),
+                ),
+            ]
+        ],
+    )
