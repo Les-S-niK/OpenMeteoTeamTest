@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "aiohttp>=3.14.4",
     "fastapi[standard]>=0.142.2",
 ]
 
