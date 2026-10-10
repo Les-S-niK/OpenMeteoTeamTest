@@ -53,10 +53,10 @@ class TodayWeather(BaseModel):
     location: LocationInfo
     condition: WeatherType
     wind_force: WindForce
-    temperature: float
-    water_temperature: float
-    humidity: int
-    pressure: float
+    temperature: float = Field(description="°C")
+    water_temperature: float = Field(description="°C")
+    humidity: int = Field(description="%")
+    pressure: float = Field(description="мм. рт. ст.")
     uv_index: float
 
 
