@@ -1,3 +1,5 @@
+import math
+from bisect import bisect_right
 from datetime import date
 from enum import Enum
 
@@ -14,6 +16,33 @@ class WeatherType(str, Enum):
     FOG = "fog"
 
 
+class WindForce(str, Enum):
+    CALM = "Штиль"
+    LIGHT_AIR = "Тихий ветер"
+    LIGHT_BREEZE = "Легкий ветер"
+    GENTLE_BREEZE = "Слабый ветер"
+    MODERATE_BREEZE = "Умеренный ветер"
+    FRESH_BREEZE = "Свежий ветер"
+    STRONG_BREEZE = "Сильный ветер"
+    HIGH_WIND = "Крепкий ветер"
+    GALE = "Очень крепкий ветер"
+    STRONG_GALE = "Шторм"
+    STORM = "Сильный шторм"
+    VIOLENT_STORM = "Жестокий шторм"
+    HURRICANE = "Ураган"
+
+    @staticmethod
+    def from_speed(speed_kmh: float) -> WindForce:
+        if not math.isfinite(speed_kmh) or speed_kmh < 0:
+            raise ValueError(f"Некорректная скорость ветра: {speed_kmh!r}")
+        index = bisect_right(_THRESHOLDS, speed_kmh)
+        return _MEMBERS[index]
+
+
+_THRESHOLDS = (1, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117)
+_MEMBERS = tuple(WindForce)
+
+
 class LocationInfo(BaseModel):
     city: str
     country: str
@@ -22,9 +51,12 @@ class LocationInfo(BaseModel):
 
 class TodayWeather(BaseModel):
     location: LocationInfo
-    temperature: float
-    humidity: int
-    pressure: float
+    condition: WeatherType
+    wind_force: WindForce
+    temperature: float = Field(description="°C")
+    water_temperature: float = Field(description="°C")
+    humidity: int = Field(description="%")
+    pressure: float = Field(description="мм. рт. ст.")
     uv_index: float
 
 
