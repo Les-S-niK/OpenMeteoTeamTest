@@ -2,18 +2,59 @@ import math
 from bisect import bisect_right
 from datetime import date
 from enum import Enum
+from typing import Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 
 class WeatherType(str, Enum):
-    CLEAR = "clear"
-    CLOUDS = "clouds"
-    RAIN = "rain"
-    SNOW = "snow"
-    THUNDERSTORM = "thunderstorm"
-    DRIZZLE = "drizzle"
-    FOG = "fog"
+    icon: str
+    alt: str
+    codes: tuple[int, ...]
+
+    def __new__(cls, value: str, icon: str, alt: str, codes: tuple[int, ...]) -> Self:
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        obj.icon = icon
+        obj.alt = alt
+        obj.codes = codes
+        return obj
+
+    CLEAR = ("clear", "sun.png", "Ясно", (0,))
+    PARTLY_CLOUDY = ("partly_cloudy", "cloud-sun.png", "Переменная облачность", (1, 2))
+    CLOUDS = ("clouds", "cloud.png", "Пасмурно", (3, 45, 48, 71, 73, 75, 77, 85, 86))
+    RAIN = (
+        "rain",
+        "rain.png",
+        "Дождь",
+        (51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82),
+    )
+    THUNDERSTORM = ("thunderstorm", "storm.png", "Гроза", (95, 96, 99))
+
+    @classmethod
+    def from_wmo(cls, code: int) -> WeatherType:
+        for weather_type in cls:
+            if code in weather_type.codes:
+                return weather_type
+        return cls.CLOUDS  # Запасной вариант
+
+
+class WeatherCondition(BaseModel):
+    type: WeatherType
+
+    @computed_field
+    @property
+    def icon(self) -> str:
+        return self.type.icon
+
+    @computed_field
+    @property
+    def alt(self) -> str:
+        return self.type.alt
+
+    @classmethod
+    def from_wmo(cls, code: int) -> WeatherCondition:
+        return cls(type=WeatherType.from_wmo(code))
 
 
 class WindForce(str, Enum):
