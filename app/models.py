@@ -90,8 +90,12 @@ class LocationInfo(BaseModel):
 class TodayWeather(BaseModel):
     location: LocationInfo
     condition: WeatherCondition = Field(examples=[WeatherCondition.from_wmo(0)])
+    hourly_condition: list[WeatherCondition] = Field(
+        examples=[[WeatherCondition.from_wmo(1), WeatherCondition.from_wmo(3)]]
+    )
     wind_force: WindForce
     temperature: float = Field(description="°C")
+    feels_like_temp: float = Field(description="Ощущаемая температура, °C")
     water_temperature: float = Field(description="°C")
     humidity: int = Field(description="%")
     pressure: float = Field(description="мм. рт. ст.")
