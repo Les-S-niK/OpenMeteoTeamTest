@@ -104,8 +104,18 @@ class TodayWeather(BaseModel):
 
 class DaysOfWeekWeather(BaseModel):
     temperature: float
-    condition: WeatherCondition
+    condition: WeatherType
     date: date
+
+    @computed_field
+    @property
+    def alt(self) -> str:
+        return self.condition.alt
+
+    @computed_field
+    @property
+    def icon(self) -> str:
+        return self.condition.icon
 
 
 class WeatherSummary(BaseModel):
@@ -118,12 +128,12 @@ class WeatherSummary(BaseModel):
             [
                 DaysOfWeekWeather(
                     temperature=26.0,
-                    condition=WeatherCondition.from_wmo(0),
+                    condition=WeatherType.CLEAR,
                     date=date(2026, 10, 9),
                 ),
                 DaysOfWeekWeather(
                     temperature=21.0,
-                    condition=WeatherCondition.from_wmo(3),
+                    condition=WeatherType.CLOUDS,
                     date=date(2026, 10, 10),
                 ),
             ]
