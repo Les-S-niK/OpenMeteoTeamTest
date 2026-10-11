@@ -2,18 +2,56 @@ import math
 from bisect import bisect_right
 from datetime import date
 from enum import Enum
+from typing import Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 
 class WeatherType(str, Enum):
-    CLEAR = "clear"
-    CLOUDS = "clouds"
-    RAIN = "rain"
-    SNOW = "snow"
-    THUNDERSTORM = "thunderstorm"
-    DRIZZLE = "drizzle"
-    FOG = "fog"
+    icon: str
+    alt: str
+
+    def __new__(cls, value: str, icon: str, alt: str) -> Self:
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        obj.icon = icon
+        obj.alt = alt
+        return obj
+
+    CLEAR = ("clear", "sun.png", "Ясно")
+    PARTLY_CLOUDY = ("partly_cloudy", "cloud-sun.png", "Переменная облачность")
+    CLOUDS = ("clouds", "cloud.png", "Пасмурно")
+    RAIN = ("rain", "rain.png", "Дождь")
+    THUNDERSTORM = ("thunderstorm", "storm.png", "Гроза")
+
+
+WMO_TO_WEATHER_TYPE: dict[int, WeatherType] = {
+    0: WeatherType.CLEAR,
+    **dict.fromkeys((1, 2), WeatherType.PARTLY_CLOUDY),
+    **dict.fromkeys((3, 45, 48, 71, 73, 75, 77, 85, 86), WeatherType.CLOUDS),
+    **dict.fromkeys(
+        (51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82), WeatherType.RAIN
+    ),
+    **dict.fromkeys((95, 96, 99), WeatherType.THUNDERSTORM),
+}
+
+
+class WeatherCondition(BaseModel):
+    type: WeatherType
+
+    @computed_field
+    @property
+    def icon(self) -> str:
+        return self.type.icon
+
+    @computed_field
+    @property
+    def alt(self) -> str:
+        return self.type.alt
+
+    @classmethod
+    def from_wmo(cls, code: int) -> WeatherCondition:
+        return cls(type=WMO_TO_WEATHER_TYPE.get(code, WeatherType.CLOUDS))
 
 
 class WindForce(str, Enum):
@@ -51,7 +89,7 @@ class LocationInfo(BaseModel):
 
 class TodayWeather(BaseModel):
     location: LocationInfo
-    condition: WeatherType
+    condition: WeatherCondition = Field(examples=[WeatherCondition.from_wmo(0)])
     wind_force: WindForce
     temperature: float = Field(description="°C")
     water_temperature: float = Field(description="°C")
@@ -62,7 +100,7 @@ class TodayWeather(BaseModel):
 
 class DaysOfWeekWeather(BaseModel):
     temperature: float
-    condition: WeatherType
+    condition: WeatherCondition
     date: date
 
 
@@ -76,12 +114,12 @@ class WeatherSummary(BaseModel):
             [
                 DaysOfWeekWeather(
                     temperature=26.0,
-                    condition=WeatherType.CLEAR,
+                    condition=WeatherCondition.from_wmo(0),
                     date=date(2026, 10, 9),
                 ),
                 DaysOfWeekWeather(
                     temperature=21.0,
-                    condition=WeatherType.CLOUDS,
+                    condition=WeatherCondition.from_wmo(3),
                     date=date(2026, 10, 10),
                 ),
             ]
