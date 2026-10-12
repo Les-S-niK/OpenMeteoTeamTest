@@ -1,91 +1,96 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="weather.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Погода - Сочи</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Actor&family=Jura:wght@400;600&family=K2D:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Actor&family=Jura:wght@400;600&family=K2D:wght@400;700&display=swap"
+        rel="stylesheet">
+
 </head>
+
 <body>
 
     <main class="weather-app">
         <!-- ЛЕВАЯ КОЛОНКА -->
         <div class="main-info">
-            
+
             <header class="current-weather">
                 <!-- Кнопка "назад" -->
                 <a href="index.html" class="back-btn" aria-label="Назад">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
                 </a>
 
                 <div class="location">
-                    <h1>Сочи</h1>
-                    <p class="condition">Ливень с грозой</p>
+                    <h1 id="city">Сочи</h1>
+                    <p class="condition" id="current_weather">Ливень с грозой</p>
                 </div>
-                
+
                 <div class="temperature-block">
                     <div class="temp-main">
-                        <span class="temp-value">+21</span>
-                        <span class="feels-like">Ощущается как +19</span>
+                        <span class="temp-value" id="temp-value">+21</span>
+                        <span class="feels-like" id="feels_like_temp">Ощущается как +19</span>
                     </div>
                     <div class="weather-icon main-icon">
-                        <img src="img/storm.png" alt="Гроза">
+                        <img id="img_tooday" src="img/storm.png" alt="Гроза">
                     </div>
                 </div>
-                
-                <p class="date">1 Июня</p>
+
+                <p class="date" id="main_date">1 Июня</p>
             </header>
 
             <!-- Блок с часами -->
             <section class="hourly-forecast">
                 <div class="hourly-scroll">
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="0">
                         <span class="time">0:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/rain.png" alt="Дождь">
+                            <img  data-field-tooday="icon" src="img/rain.png" alt="Дождь">
                         </div>
                     </div>
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="1">
                         <span class="time">4:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/rain.png" alt="Дождь">
+                            <img data-field-tooday="icon" src="img/rain.png" alt="Дождь">
                         </div>
                     </div>
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="2">
                         <span class="time">8:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/cloud.png" alt="Облачно">
+                            <img data-field-tooday="icon" src="img/cloud.png" alt="Облачно">
                         </div>
                     </div>
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="3">
                         <span class="time">12:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/storm.png" alt="Гроза">
+                            <img data-field-tooday="icon" src="img/storm.png" alt="Гроза">
                         </div>
                     </div>
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="4">
                         <span class="time">16:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/storm.png" alt="Гроза">
+                            <img data-field-tooday="icon" src="img/storm.png" alt="Гроза">
                         </div>
                     </div>
-                    <div class="hourly-item">
+                    <div class="hourly-item" data-today-index="5">
                         <span class="time">20:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/cloud.png" alt="Облачно">
+                            <img data-field-tooday="icon" src="img/cloud.png" alt="Облачно">
                         </div>
                     </div>
-                    <div class="hourly-item">
-                        <span class="time">0:00</span>
+                    <div class="hourly-item" data-today-index="6">
+                        <span class="time">23:00</span>
                         <div class="weather-icon small-icon">
-                            <img src="img/cloud.png" alt="Облачно">
+                            <img data-field-tooday="icon" src="img/cloud.png" alt="Облачно">
                         </div>
                     </div>
                 </div>
@@ -95,80 +100,83 @@
             <section class="weather-details">
                 <div class="detail-item">
                     <span class="detail-label">Влажность:</span>
-                    <span class="detail-value">100%</span>
+                    <span class="detail-value" id="humidity">100%</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Давление:</span>
-                    <span class="detail-value">705 <br> мм рт. ст.</span>
+                    <span class="detail-value" id="pressure">705 <br> мм рт. ст.</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Ветер:</span>
-                    <span class="detail-value">Штиль</span>
+                    <span class="detail-value" id="wind_force">Штиль</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Вода:</span>
-                    <span class="detail-value">+20</span>
+                    <span class="detail-value" id="water_temperature">+20</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">УФ-индекс:</span>
-                    <span class="detail-value">6-7</span>
+                    <span class="detail-value" id="uv_index">6-7</span>
                 </div>
             </section>
         </div>
 
         <!-- ПРАВАЯ КОЛОНКА -->
         <aside class="weekly-forecast">
-            <div class="day-item">
-                <span class="day-name">Пн 1 Июня</span>
-                <span class="day-temp">+21</span>
+            <div class="day-item" data-day-index="0">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/storm.png" alt="Гроза">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Вт 2 Июня</span>
-                <span class="day-temp">+22</span>
+            <div class="day-item" data-day-index="1">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/cloud.png" alt="Облачно">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Ср 3 Июня</span>
-                <span class="day-temp">+25</span>
+            <div class="day-item" data-day-index="2">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/cloud-sun.png" alt="Облачно с прояснениями">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Чт 4 Июня</span>
-                <span class="day-temp">+27</span>
+            <div class="day-item" data-day-index="3">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/sun.png" alt="Ясно">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Пт 5 Июня</span>
-                <span class="day-temp">+28</span>
+            <div class="day-item" data-day-index="4">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/sun.png" alt="Ясно">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Сб 6 Июня</span>
-                <span class="day-temp">+28</span>
+            <div class="day-item" data-day-index="5">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/sun.png" alt="Ясно">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
-            <div class="day-item">
-                <span class="day-name">Вс 7 Июня</span>
-                <span class="day-temp">+30</span>
+            <div class="day-item" data-day-index="6">
+                <span class="day-name" data-field="date">-</span>
+                <span class="day-temp" data-field="temp">-</span>
                 <div class="weather-icon day-icon">
-                    <img src="img/sun.png" alt="Ясно">
+                    <img src="img/storm.png" alt="Гроза" data-field="icon">
                 </div>
             </div>
         </aside>
     </main>
 
+    <script src="app.js">
+    </script>
 </body>
+
 </html>
