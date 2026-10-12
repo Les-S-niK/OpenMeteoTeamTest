@@ -1,3 +1,7 @@
+const WEATHER_API_PREFIX = "http://localhost:8000"
+const WEATHER_TODAY_URI = "/weather/today/"
+const WEATHER_WEEK_URI = "/weather/week/"
+
       let tooday_graf = {
             "location": {
                 "city": "-",
@@ -52,7 +56,7 @@
         }
 
         async function getDataTooday() {
-            const response = await fetch("./tooday.json");
+            const response = await fetch(`${WEATHER_API_PREFIX}${WEATHER_TODAY_URI}`);
             if (!response.ok) {
                 throw new Error("Error in response_tooday.ok");
             }
@@ -65,7 +69,7 @@
         }
 
         async function getDataWeek() {
-            const response = await fetch("./week.json");
+            const response = await fetch(`${WEATHER_API_PREFIX}${WEATHER_WEEK_URI}`);
             if (!response.ok) {
                 throw new Error("Error in response_week.ok");
             }
