@@ -1,4 +1,4 @@
-            let tooday_graf = {
+      let tooday_graf = {
             "location": {
                 "city": "-",
                 "country": "-",
