@@ -8,7 +8,7 @@ from app.models import (
     TodayWeather,
     WeatherSummary,
 )
-from app.service import build_today_weather
+from app.service import build_today_weather, build_weekly_weather
 
 
 @asynccontextmanager
@@ -41,4 +41,5 @@ async def get_today_weather(sess: HttpSession) -> TodayWeather:
 
 
 @app.get("/weather/week")
-async def get_week_weather(sess: HttpSession) -> WeatherSummary: ...
+async def get_week_weather(sess: HttpSession) -> WeatherSummary:
+    return await build_weekly_weather(sess=sess)

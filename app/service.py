@@ -1,9 +1,17 @@
 import asyncio
+from datetime import datetime
 from typing import Any
 
 import aiohttp
 
-from app.models import LocationInfo, TodayWeather, WeatherCondition, WindForce
+from app.models import (
+    DaysOfWeekWeather,
+    LocationInfo,
+    TodayWeather,
+    WeatherCondition,
+    WeatherSummary,
+    WindForce,
+)
 
 SOCHI_COORDINATE = {"latitude": 43.5992, "longitude": 39.7257}
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
@@ -22,15 +30,18 @@ WEATHER_HOURLY = (
     "weather_code",
     "temperature_2m",
 )
-
 MARINE_CURRENT = "sea_surface_temperature"
+
+WEEKLY_WEATHER = (
+    "temperature_2m_mean",
+    "weather_code",
+)
 
 
 async def _fetch(sess: aiohttp.ClientSession, url: str, **params) -> dict[str, Any]:
     params = {
         **SOCHI_COORDINATE,
         **params,
-        "forecast_days": 1,
         "timezone": "auto",
     }
     async with sess.get(url, params=params) as response:
@@ -44,23 +55,34 @@ async def _get_today_weather(sess: aiohttp.ClientSession) -> dict[str, Any]:
         FORECAST_URL,
         current=",".join(WEATHER_CURRENT),
         hourly=",".join(WEATHER_HOURLY),
+        forecast_days=1,
     )
     result = {
         "current": data.get("current", {}),
-        "current_units": data.get("current_units", {}),
         "hourly": data.get("hourly", {}),
-        "hourly_units": data.get("hourly_units", {}),
     }
 
     return result
 
 
 async def _get_marine_temperature(sess: aiohttp.ClientSession) -> float | None:
-    data = await _fetch(sess, MARINE_URL, current=MARINE_CURRENT)
+    data = await _fetch(
+        sess,
+        MARINE_URL,
+        current=MARINE_CURRENT,
+        forecast_days=1,
+    )
     return data.get("current", {}).get("sea_surface_temperature")
 
 
-async def _get_week_weather(sess: aiohttp.ClientSession): ...
+async def _get_week_weather(sess: aiohttp.ClientSession) -> dict[str, Any]:
+    data = await _fetch(
+        sess,
+        FORECAST_URL,
+        daily=WEEKLY_WEATHER,
+        forecast_days=7,
+    )
+    return data.get("daily", {})
 
 
 async def build_today_weather(sess: aiohttp.ClientSession) -> TodayWeather:
@@ -95,11 +117,50 @@ async def build_today_weather(sess: aiohttp.ClientSession) -> TodayWeather:
     return result
 
 
+async def build_weekly_weather(sess: aiohttp.ClientSession) -> WeatherSummary:
+    daily = await _get_week_weather(sess=sess)
+
+    dates: list[str] = daily.get("time", [])
+    temperatures: list[int] = daily.get("temperature_2m_mean", [])
+    weather_codes: list[int] = daily.get("weather_code", [])
+
+    weekly_weather: list[DaysOfWeekWeather] = []
+
+    for temp, weath_code, date in zip(temperatures, weather_codes, dates):
+        weekly_weather.append(
+            DaysOfWeekWeather(
+                temperature=temp,
+                condition=WeatherCondition.from_wmo(weath_code).type,
+                date=datetime.fromisoformat(date),
+            )
+        )
+
+    result = WeatherSummary(
+        location=LocationInfo(
+            city="Сочи", country="Россия", date=datetime.fromisoformat(dates[0])
+        ),
+        weather_for_week=weekly_weather,
+    )
+    return result
+
+
 async def main():
+    """Функция быстрой проверки при запуске отдельным скриптом"""
     async with aiohttp.ClientSession() as sess:
-        return await build_today_weather(sess)
+        results = await asyncio.gather(
+            build_today_weather(sess),
+            build_weekly_weather(sess),
+            return_exceptions=True,
+        )
+        for name, res in zip(("Сегодняшняя", "Недельная"), results):
+            print(f"\t{name.upper()} ПОГОДА\nСтатус: ", end="")
+            if isinstance(res, (Exception, BaseException)):
+                print(f"Ошибка: \n[{type(res).__name__}] {res}\n")
+            else:
+                print(f"Успешный результат \n{res.model_dump_json(indent=4)}\n")
+
+        return results
 
 
 if __name__ == "__main__":
-    result = asyncio.run(main())
-    print(result.model_dump_json(indent=4))
+    asyncio.run(main())
