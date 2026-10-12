@@ -3,6 +3,7 @@ from typing import Annotated
 
 import aiohttp
 from fastapi import Depends, FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import (
     TodayWeather,
@@ -21,6 +22,19 @@ async def lifespan(app: FastAPI):
 
 
 app: FastAPI = FastAPI(lifespan=lifespan)
+
+origins = [
+    "http://localhost",
+    "http://localhost:80",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_http(request: Request) -> aiohttp.ClientSession:
