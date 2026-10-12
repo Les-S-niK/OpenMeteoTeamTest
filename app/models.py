@@ -1,6 +1,6 @@
 import math
 from bisect import bisect_right
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
 from typing import Self
 
@@ -84,7 +84,7 @@ _MEMBERS = tuple(WindForce)
 class LocationInfo(BaseModel):
     city: str
     country: str
-    date: date
+    date: datetime
 
 
 class TodayWeather(BaseModel):
